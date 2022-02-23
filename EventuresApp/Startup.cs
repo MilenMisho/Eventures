@@ -1,3 +1,4 @@
+using Eventures.App.Infrastructure;
 using EventuresApp.Data;
 using EventuresApp.Domain;
 using Microsoft.AspNetCore.Builder;
@@ -39,8 +40,10 @@ namespace EventuresApp
             services.AddControllersWithViews();
             services.AddRazorPages();
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<IdentityUser>()
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+                //.AddDefaultTokenProviders();
             //services.AddControllersWithViews();
 
             services.Configure<IdentityOptions>(options =>
@@ -57,6 +60,7 @@ namespace EventuresApp
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.PrepareDatabase();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
